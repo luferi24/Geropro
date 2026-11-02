@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KineApp Geronto Pro - Valoración y Rehabilitación Geriátrica</title>
+    <!-- Tailwind CSS para un diseño moderno y responsivo -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js para gráficos dinámicos -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Google Fonts Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col">
+
+    <!-- HEADER / NAVEGACIÓN -->
+    <header class="bg-indigo-700 text-white shadow-lg sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 py-4 flex flex-col md:flex-row justify-between items-center">
+            <div class="flex items-center space-x-3 mb-2 md:mb-0">
+                <span class="text-3xl">🧓</span>
+                <div>
+                    <h1 class="text-xl font-bold tracking-wide">KineApp Geronto Pro</h1>
+                    <p class="text-xs text-indigo-200">Plataforma Académica y Clínica de Valoración Geriátrica</p>
+                </div>
+            </div>
+            <nav class="flex flex-wrap gap-2 justify-center">
+                <button onclick="switchTab('calculadora')" id="btn-calculadora" class="px-3 py-1.5 rounded-lg text-sm font-medium bg-indigo-800 text-white transition shadow-sm">Calculadora Clínica</button>
+                <button onclick="switchTab('escalas')" id="btn-escalas" class="px-3 py-1.5 rounded-lg text-sm font-medium text-indigo-100 hover:bg-indigo-600 transition">Test y Escalas</button>
+                <button onclick="switchTab('casos')" id="btn-casos" class="px-3 py-1.5 rounded-lg text-sm font-medium text-indigo-100 hover:bg-indigo-600 transition">Casos Clínicos</button>
+                <button onclick="switchTab('farmacos')" id="btn-farmacos" class="px-3 py-1.5 rounded-lg text-sm font-medium text-indigo-100 hover:bg-indigo-600 transition">Farmacología</button>
+                <button onclick="switchTab('ejercicios')" id="btn-ejercicios" class="px-3 py-1.5 rounded-lg text-sm font-medium text-indigo-100 hover:bg-indigo-600 transition">Ejercicio Basado en Ciencia</button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- CONTENIDO PRINCIPAL -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 py-6">
+
+        <!-- MÓDULO 1: CALCULADORA Y SEMÁFORO CLÍNICO -->
+        <section id="tab-calculadora" class="space-y-6">
+            <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
+                <h2 class="text-xl font-bold text-slate-900 mb-2">Evaluación Funcional Interactiva (> 60 años)</h2>
+                <p class="text-sm text-slate-500 mb-6">Ingresa los datos del paciente para obtener el cálculo automático y las alertas de riesgo basadas en criterios geriátricos oficiales.</p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <!-- Datos Generales -->
+                    <div class="space-y-4">
+                        <h3 class="font-semibold text-slate-700 text-sm uppercase tracking-wider">1. Datos Básicos</h3>
+                        <div>
+                            <label class="block text-xs font-medium text-slate-600 mb-1">Edad (Años)</label>
+                            <input type="number" id="input-edad" value="72" class="w-full border border-slate-300 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium text-slate-600 mb-1">Sexo Biológico</label>
+                            <select id="select-sexo" class="w-full border border-slate-300 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                                <option value="femenino">Femenino</option>
+                                <option value="masculino">Masculino</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium text-slate-600 mb-1">Presión Arterial (mmHg)</label>
+                            <input type="text" id="input-pa" value="130/80" class="w-full border border-slate-300 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none" placeholder="Ej: 130/80">
+                        </div>
+                    </div>
+
+                    <!-- Tests Funcionales -->
+                    <div class="space-y-4">
+                        <h3 class="font-semibold text-slate-700 text-sm uppercase tracking-wider">2. Pruebas Físicas Clave</h3>
+                        <div>
+                            <label class="block text-xs font-medium text-slate-600 mb-1">Timed Up and Go - TUG (Segundos)</label>
+                            <input type="number" id="input-tug" value="12" class="w-full border border-slate-300 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                            <span class="text-[11px] text-slate-400">Normal: &lt; 12s | Riesgo caídas: &ge; 13.5s</span>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium text-slate-600 mb-1">Dinamometría / Fuerza Prensil (Kg)</label>
+                            <input type="number" id="input-dinamo" value="18" class="w-full border border-slate-300 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                            <span class="text-[11px] text-slate-400">Corte Sarcopenia: Mujer &lt; 16kg | Hombre &lt; 27kg</span>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium text-slate-600 mb-1">SPPB (Puntaje Total 0 - 12)</label>
+                            <input type="number" id="input-sppb" value="8" min="0" max="12" class="w-full border border-slate-300 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                            <span class="text-[11px] text-slate-400">Fragilidad: 0 - 9 puntos</span>
+                        </div>
+                    </div>
+
+                    <!-- Resultados y Semáforo -->
+                    <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 flex flex-col justify-between">
+                        <div>
+                            <h3 class="font-semibold text-slate-700 text-sm uppercase tracking-wider mb-3">3. Triaje y Semáforo Clínico</h3>
+                            <div id="resultado-container" class="space-y-2 text-sm">
+                                <div id="alerta-tug" class="p-2 rounded-lg bg-emerald-100 text-emerald-800 font-medium text-xs flex items-center justify-between">
+                                    <span>TUG: Normal</span> <span>🟢</span>
+                                </div>
+                                <div id="alerta-sarcopenia" class="p-2 rounded-lg bg-amber-100 text-amber-800 font-medium text-xs flex items-center justify-between">
+                                    <span>Sarcopenia: Riesgo / Probable</span> <span>🟡</span>
+                                </div>
+                                <div id="alerta-sppb" class="p-2 rounded-lg bg-amber-100 text-amber-800 font-medium text-xs flex items-center justify-between">
+                                    <span>Fragilidad SPPB: Frágil</span> <span>🟡</span>
+                                </div>
+                            </div>
+                        </div>
+                        <button onclick="calcularRiesgos()" class="w-full mt-4 bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded-lg text-sm transition shadow">
+                            Actualizar Evaluación
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- MÓDULO 2: ESCALAS Y TEST (CATÁLOGO DETALLADO) -->
+        <section id="tab-escalas" class="hidden space-y-6">
+            <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
+                <h2 class="text-xl font-bold text-slate-900 mb-1">Catálogo de Escalas y Test Geriátricos</h2>
+                <p class="text-sm text-slate-500 mb-6">Guía oficial con fundamentos fisiológicos y puntos de corte clínicamente validados en mayores de 60 años.</p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- Tarjeta 1 -->
+                    <div class="border border-slate-200 rounded-xl p-4 hover:border-indigo-300 transition">
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="font-bold text-indigo-700">Timed Up and Go (TUG)</h3>
+                            <span class="text-xs bg-indigo-50 text-indigo-700 font-semibold px-2 py-0.5 rounded">Equilibrio / Caídas</span>
+                        </div>
+                        <p class="text-xs text-slate-600 mb-2">Mide el tiempo que tarda el paciente en levantarse de una silla, caminar 3 metros, girar y volver a sentarse.</p>
+                        <p class="text-xs font-semibold text-slate-800">Corte > 60 años: <span class="text-rose-600">&ge; 13.5 segundos</span> indica alto riesgo de caídas[span_0](start_span)[span_0](end_span).</p>
+                    </div>
+                    <!-- Tarjeta 2 -->
+                    <div class="border border-slate-200 rounded-xl p-4 hover:border-indigo-300 transition">
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="font-bold text-indigo-700">SPPB (Short Physical Performance Battery)</h3>
+                            <span class="text-xs bg-indigo-50 text-indigo-700 font-semibold px-2 py-0.5 rounded">Fragilidad / Rendimiento</span>
+                        </div>
+                        <p class="text-xs text-slate-600 mb-2">Evalúa balance estático, velocidad de marcha y fuerza de extremidades inferiores mediante prueba de sedestación a bipedestación.</p>
+                        <p class="text-xs font-semibold text-slate-800">Corte > 60 años: <span class="text-rose-600">0 a 9 puntos</span> clasifica al paciente como frágil o con alto riesgo de discapacidad.</p>
+                    </div>
+                    <!-- Tarjeta 3 -->
+                    <div class="border border-slate-200 rounded-xl p-4 hover:border-indigo-300 transition">
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="font-bold text-indigo-700">Dinamometría Manual (Fuerza Prensil)</h3>
+                            <span class="text-xs bg-indigo-50 text-indigo-700 font-semibold px-2 py-0.5 rounded">Sarcopenia</span>
+                        </div>
+                        <p class="text-xs text-slate-600 mb-2">Evalúa la fuerza máxima de agarre con dinamómetro hidráulico en posición estandarizada.</p>
+                        <p class="text-xs font-semibold text-slate-800">Corte EWGSOP2: Mujer <span class="text-rose-600">&lt; 16 kg</span> | Hombre <span class="text-rose-600">&lt; 27 kg</span>[span_1](start_span)[span_1](end_span)[span_2](start_span)[span_2](end_span).</p>
+                    </div>
+                    <!-- Tarjeta 4 -->
+                    <div class="border border-slate-200 rounded-xl p-4 hover:border-indigo-300 transition">
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="font-bold text-indigo-700">Índice de Barthel</h3>
+                            <span class="text-xs bg-indigo-50 text-indigo-700 font-semibold px-2 py-0.5 rounded">Dependencia / AVD</span>
+                        </div>
+                        <p class="text-xs text-slate-600 mb-2">Mide 10 actividades básicas de la vida diaria (alimentación, baño, vestido, deposiciones, etc.).</p>
+                        <p class="text-xs font-semibold text-slate-800">Corte: 100 (Independiente) | 60-99 (Dependencia leve) | &lt; 60 (Dependencia moderada a total).</p>
+                    </div>
+                    <!-- Tarjeta 5 -->
+                    <div class="border border-slate-200 rounded-xl p-4 hover:border-indigo-300 transition">
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="font-bold text-indigo-700">Escala de Braden</h3>
+                            <span class="text-xs bg-indigo-50 text-indigo-700 font-semibold px-2 py-0.5 rounded">Lesiones por Presión</span>
+                        </div>
+                        <p class="text-xs text-slate-600 mb-2">Evalúa riesgo de úlceras por presión según percepción sensorial, humedad, actividad, movilidad, fricción y cizallamiento.</p>
+                        <p class="text-xs font-semibold text-slate-800">Corte: <span class="text-rose-600">&le; 16 puntos</span> indica riesgo elevado de LPP[span_3](start_span)[span_3](end_span).</p>
+                    </div>
+                    <!-- Tarjeta 6 -->
+                    <div class="border border-slate-200 rounded-xl p-4 hover:border-indigo-300 transition">
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="font-bold text-indigo-700">Pregunta Sorpresa (NECPAL)</h3>
+                            <span class="text-xs bg-indigo-50 text-indigo-700 font-semibold px-2 py-0.5 rounded">Cuidados Paliativos</span>
+                        </div>
+                        <p class="text-xs text-slate-600 mb-2">"¿Le sorprendería que este paciente falleciera en los próximos 12 meses?" Permite identificar necesidades de confort y fin de vida[span_4](start_span)[span_4](end_span).</p>
+                        <p class="text-xs font-semibold text-slate-800">Resultado Positivo: Activa derivación a Enfoque Paliativo Universal (Ley 21.375)[span_5](start_span)[span_5](end_span).</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- MÓDULO 3: CASOS CLÍNICOS NIVELADOS -->
+        <section id="tab-casos" class="hidden space-y-6">
+            <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
+                    <div>
+                        <h2 class="text-xl font-bold text-slate-900">Simulador de Casos Clínicos</h2>
+                        <p class="text-sm text-slate-500">Resuelve casos con distractores clínicos avanzados (alternativas diseñadas para generar duda clínica).</p>
+                    </div>
+                    <div class="mt-3 md:mt-0 flex gap-2">
+                        <button onclick="cargarCaso('ensayo')" class="px-3 py-1 text-xs font-medium bg-emerald-100 text-emerald-800 rounded-lg">Ensayo</button>
+                        <button onclick="cargarCaso('intermedio')" class="px-3 py-1 text-xs font-medium bg-amber-100 text-amber-800 rounded-lg">Intermedio</button>
+                        <button onclick="cargarCaso('dificil')" class="px-3 py-1 text-xs font-medium bg-rose-100 text-rose-800 rounded-lg">Difícil</button>
+                    </div>
+                </div>
+
+                <div id="contenedor-caso" class="bg-slate-50 border border-slate-200 rounded-xl p-5 space-y-4">
+                    <!-- Se inyecta dinámicamente con JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- MÓDULO 4: FARMACOLOGÍA GERONTOLÓGICA -->
+        <section id="tab-farmacos" class="hidden space-y-6">
+            <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
+                <h2 class="text-xl font-bold text-slate-900 mb-1">Farmacología en Personas Mayores</h2>
+                <p class="text-sm text-slate-500 mb-6">Impacto del envejecimiento renal y hepático en el metabolismo de fármacos, polifarmacia y Fármacos Potencialmente Inapropiados (Criterios de Beers).</p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="bg-rose-50 border border-rose-200 rounded-xl p-4">
+                        <h3 class="font-bold text-rose-800 text-sm mb-2">⚠️ Fármacos de Alto Riesgo / Inapropiados (Beers)</h3>
+                        <ul class="text-xs space-y-2 text-rose-900">
+                            <li>• <b>Benzodiazepinas (Ej. Clonazepam, Diazepam):</b> Alta vida media en ancianos. Generan sedación profunda, deterioro cognitivo transitorio y son la causa número uno de caídas y fracturas de cadera en ELEAM[span_6](start_span)[span_6](end_span).</li>
+                            <li>• <b>Anticolinérgicos:</b> Provocan sequedad bucal, constipación, retención urinaria y confusión aguda (delirium)[span_7](start_span)[span_7](end_span).</li>
+                            <li>• <b>AINEs Crónicos (Ej. Ibuprofeno, Ketoprofeno):</b> Nefrotoxicidad agravada por la reducción fisiológica del filtrado glomerular (hasta un 50% menos en la vejez)[span_8](start_span)[span_8](end_span).</li>
+                        </ul>
+                    </div>
+                    <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-4">
+                        <h3 class="font-bold text-emerald-800 text-sm mb-2">💊 Fármacos Comunes de Mantención (Crónicos)</h3>
+                        <ul class="text-xs space-y-2 text-emerald-900">
+                            <li>• <b>Antihipertensivos (IECA / ARA-II / Calcioantagonistas):</b> Usados para controlar la rigidez arterial. Requieren control estricto para prevenir episodios de hipotensión ortostática.</li>
+                            <li>• <b>Antidiabéticos Orales (Metformina):</b> Manejo de la intolerancia a la glucosa por menor respuesta pancreática.</li>
+                            <li>• <b>Suplementación (Vitamina D y Calcio):</b> Prevención y manejo complementario de la desmineralización ósea y sarcopenia.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- MÓDULO 5: PRESCRIPCIÓN DE EJERCICIO BASADO EN CIENCIA -->
+        <section id="tab-ejercicios" class="hidden space-y-6">
+            <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
+                <h2 class="text-xl font-bold text-slate-900 mb-1">Prescripción de Ejercicio Geriátrico Basado en Ciencia</h2>
+                <p class="text-sm text-slate-500 mb-6">Pautas de intervención kinésica respaldadas por guías internacionales (VIVIFRAIL, OARSI, OMS) adaptadas a patologías prevalentes.</p>
+                
+                <div class="space-y-4">
+                    <div class="border border-slate-200 rounded-xl p-4">
+                        <h3 class="font-bold text-indigo-700 text-sm mb-1">1. Sarcopenia y Fragilidad (Programa VIVIFRAIL)</h3>
+                        <p class="text-xs text-slate-600 mb-2"><b>Evidencia:</b> Programas multicomponentes que combinan fuerza muscular, equilibrio, resistencia aeróbica y flexibilidad.</p>
+                        <p class="text-xs text-slate-800 bg-slate-50 p-2 rounded"><b>Dosificación recomendada:</b> 2 a 3 veces por semana. Ejercicios de fuerza progresiva con bandas elásticas o peso corporal (ej. levantarse de la silla sin apoyo), sumado a tareas de doble tarea (cognitiva + motora) para reducir caídas.</p>
+                    </div>
+                    <div class="border border-slate-200 rounded-xl p-4">
+                        <h3 class="font-bold text-indigo-700 text-sm mb-1">2. Artrosis de Rodilla / Cadera (Consenso OARSI)</h3>
+                        <p class="text-xs text-slate-600 mb-2"><b>Evidencia:</b> El ejercicio terapéutico disminuye el dolor crónico articular mediante la liberación de endorfinas y mejora de la estabilidad patelofemoral.</p>
+                        <p class="text-xs text-slate-800 bg-slate-50 p-2 rounded"><b>Dosificación recomendada:</b> Fortalecimiento isométrico y concéntrico de cuádriceps (cadena cinética cerrada controlada) y ejercicio aeróbico de bajo impacto (bicicleta estática o caminata supervisada).</p>
+                    </div>
+                    <div class="border border-slate-200 rounded-xl p-4">
+                        <h3 class="font-bold text-indigo-700 text-sm mb-1">3. Prevención de Caídas y Deterioro del Balance (Guías NICE)</h3>
+                        <p class="text-xs text-slate-600 mb-2"><b>Evidencia:</b> Intervenciones basadas en el entrenamiento de los reflejos posturales y propiocepción.</p>
+                        <p class="text-xs text-slate-800 bg-slate-50 p-2 rounded"><b>Dosificación recomendada:</b> Entrenamientos de equilibrio desafiante (disminución de base de sustentación, transferencia de peso unipodal) por un mínimo de 3 horas semanales.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-white border-t border-slate-200 mt-auto py-4 text-center text-xs text-slate-500">
+        KineApp Geronto Pro • Creado para apoyar a estudiantes de Kinesiología y a la Comunidad de Personas Mayores (Sin Fines de Lucro).
+    </footer>
+
+    <!-- JAVASCRIPT DE LA APLICACIÓN -->
+    <script>
+        // Navegación entre pestañas
+        function switchTab(tabId) {
+            const tabs = ['calculadora', 'escalas', 'casos', 'farmacos', 'ejercicios'];
+            tabs.forEach(t => {
+                document.getElementById(`tab-${t}`).classList.add('hidden');
+                document.getElementById(`btn-${t}`).classList.remove('bg-indigo-800', 'text-white', 'shadow-sm');
+                document.getElementById(`btn-${t}`).classList.add('text-indigo-100');
+            });
+            document.getElementById(`tab-${tabId}`).classList.remove('hidden');
+            document.getElementById(`btn-${tabId}`).classList.add('bg-indigo-800', 'text-white', 'shadow-sm');
+            document.getElementById(`btn-${tabId}`).classList.remove('text-indigo-100');
+        }
+
+        // Lógica de cálculo y semáforo
+        function calcularRiesgos() {
+            const tug = parseFloat(document.getElementById('input-tug').value) || 0;
+            const dinamo = parseFloat(document.getElementById('input-dinamo').value) || 0;
+            const sppb = parseInt(document.getElementById('input-sppb').value) || 0;
+            const sexo = document.getElementById('select-sexo').value;
+
+            // Alerta TUG
+            const alertaTug = document.getElementById('alerta-tug');
+            if (tug >= 13.5) {
+                alertaTug.className = "p-2 rounded-lg bg-rose-100 text-rose-800 font-medium text-xs flex items-center justify-between";
+                alertaTug.innerHTML = `<span>TUG: Alto Riesgo de Caídas (${tug}s)</span> <span>🔴</span>`;
+            } else {
+                alertaTug.className = "p-2 rounded-lg bg-emerald-100 text-emerald-800 font-medium text-xs flex items-center justify-between";
+                alertaTug.innerHTML = `<span>TUG: Normal (${tug}s)</span> <span>🟢</span>`;
+            }
+
+            // Alerta Sarcopenia
+            const alertaSarco = document.getElementById('alerta-sarcopenia');
+            const corteDinamo = sexo === 'femenino' ? 16 : 27;
+            if (dinamo < corteDinamo) {
+                alertaSarco.className = "p-2 rounded-lg bg-rose-100 text-rose-800 font-medium text-xs flex items-center justify-between";
+                alertaSarco.innerHTML = `<span>Sarcopenia: Probable (${dinamo} kg)</span> <span>🔴</span>`;
+            } else {
+                alertaSarco.className = "p-2 rounded-lg bg-emerald-100 text-emerald-800 font-medium text-xs flex items-center justify-between";
+                alertaSarco.innerHTML = `<span>Sarcopenia: Fuerza Normal (${dinamo} kg)</span> <span>🟢</span>`;
+            }
+
+            // Alerta SPPB
+            const alertaSppb = document.getElementById('alerta-sppb');
+            if (sppb <= 9) {
+                alertaSppb.className = "p-2 rounded-lg bg-amber-100 text-amber-800 font-medium text-xs flex items-center justify-between";
+                alertaSppb.innerHTML = `<span>Fragilidad SPPB: Frágil (${sppb}/12 pts)</span> <span>🟡</span>`;
+            } else {
+                alertaSppb.className = "p-2 rounded-lg bg-emerald-100 text-emerald-800 font-medium text-xs flex items-center justify-between";
+                alertaSppb.innerHTML = `<span>Fragilidad SPPB: Robusto (${sppb}/12 pts)</span> <span>🟢</span>`;
+            }
+        }
+
+        // Banco de Casos Clínicos con Distractores Clínicos (4 alternativas)
+        const casosBanco = {
+            ensayo: {
+                nivel: "Ensayo (Nivel Básico)",
+                texto: "Don Roberto, de 82 años, acude a consulta médica por presentar una disminución progresiva en su velocidad de marcha, debilidad generalizada y dificultad para levantarse de la silla en los últimos 6 meses. Al evaluarlo, se registra una fuerza prensil palmar de 15 kg (siendo hombre). ¿Cuál es el diagnóstico sindrómico inicial más certero y prioritario que debe consignar el kinesiólogo?",
+                alternativas: [
+                    "A) Síndrome de Inmovilidad crónica por desacondicionamiento.",
+                    "B) Probable Sarcopenia severa según los criterios de fuerza disminuida.",
+                    "C) Cuadro de Demencia Frontotemporal en etapa inicial.",
+                    "D) Trastorno metabólico secundario a polifarmacia."
+                ],
+                correcta: 1, // Opción B (índice 1)
+                retro: "Correcto. La combinación de baja fuerza prensil (<27 kg en hombres) asociada a la pérdida de funcionalidad al levantarse de la silla configura el cuadro clínico cardinal de Sarcopenia[span_9](start_span)[span_9](end_span)."
+            },
+            intermedio: {
+                nivel: "Intermedio (Razonamiento Clínico)",
+                texto: "Doña Marta, de 78 años, hospitalizada por neumonía, presenta de forma súbita durante su segunda noche desorientación en tiempo y espacio, alucinaciones visuales y fluctuaciones en su nivel de alerta (somnolienta en el día, agitada en la noche). No presenta antecedentes de deterioro cognitivo previo. ¿Ante qué condición nos encontramos?",
+                alternativas: [
+                    "A) Un cuadro típico de Enfermedad de Alzheimer en fase avanzada.",
+                    "B) Un episodio de Delirium (síndrome confusional agudo) secundario a infección/hospitalización.",
+                    "C) Depresión mayor geriátrica con síntomas psicóticos agudos.",
+                    "D) Cuadro secundario a efectos prolongados de memoria a largo plazo."
+                ],
+                correcta: 1,
+                retro: "Correcto. El inicio brusco, la fluctuación diurna y las alteraciones de la atención y percepción en un paciente sin demencia previa son características patognomónicas del Delirium[span_10](start_span)[span_10](end_span)."
+            },
+            dificil: {
+                nivel: "Difícil (Caso Complejo / ELEAM)",
+                texto: "Don Alberto, de 81 años, residente de un ELEAM, presenta antecedentes de HTA, artrosis severa e insomnio crónico. Consume 7 fármacos diarios, destacando el uso frecuente y sin supervisión de Clonazepam. Es traído a kinesiología tras una caída nocturna y se observa marcha atáxica y confusión matutina. Considerando la farmacocinética geriátrica, ¿cuál es el análisis fisiopatológico y clínico más preciso?",
+                alternativas: [
+                    "A) La caída es un evento puramente accidental mecánico debido exclusivamente a la artrosis de rodilla.",
+                    "B) Existe una interacción por polifarmacia y efecto sedante acumulativo de benzodiacepinas, aumentando el riesgo de caídas y trastornos de alerta por menor clearance renal.",
+                    "C) El cuadro se explica exclusivamente por la pérdida irreversible de masa ósea y sarcopenia.",
+                    "D) Corresponde a un déficit de memoria sensorial visual propio de la edad avanzada."
+                ],
+                correcta: 1,
+                retro: "Correcto. Las benzodiazepinas como el clonazepam tienen una vida media prolongada en adultos mayores debido a los cambios metabólicos, generando sedación residual, ataxia y riesgo elevado de caídas, lo cual se agrava con la polifarmacia[span_11](start_span)[span_11](end_span)[span_12](start_span)[span_12](end_span)."
+            }
+        };
+
+        function cargarCaso(nivel) {
+            const caso = casosBanco[nivel];
+            const contenedor = document.getElementById('contenedor-caso');
+            
+            let html = `
+                <div class="flex justify-between items-center mb-2">
+                    <span class="text-xs font-bold uppercase tracking-wider text-indigo-700 bg-indigo-50 px-2 py-1 rounded">${caso.nivel}</span>
+                </div>
+                <p class="text-sm font-medium text-slate-800 leading-relaxed mb-4">${caso.texto}</p>
+                <div class="space-y-2 mb-4">
+            `;
+
+            caso.alternativas.forEach((alt, index) => {
+                html += `
+                    <button onclick="verificarRespuesta('${nivel}', ${index})" id="alt-${index}" class="w-full text-left text-xs p-3 rounded-lg border border-slate-200 bg-white hover:bg-slate-100 transition font-medium text-slate-700">
+                        ${alt}
+                    </button>
+                `;
+            });
+
+            html += `</div><div id="retroalimentacion" class="text-xs p-3 rounded-lg hidden"></div>`;
+            contenedor.innerHTML = html;
+        }
+
+        function verificarRespuesta(nivel, seleccionada) {
+            const caso = casosBanco[nivel];
+            const retro = document.getElementById('retroalimentacion');
+            
+            // Pintar alternativas
+            caso.alternativas.forEach((_, index) => {
+                const btn = document.getElementById(`alt-${index}`);
+                btn.disabled = true;
+                if (index === caso.correcta) {
+                    btn.classList.add('bg-emerald-100', 'border-emerald-400', 'text-emerald-900');
+                } else if (index === seleccionada) {
+                    btn.classList.add('bg-rose-100', 'border-rose-400', 'text-rose-900');
+                }
+            });
+
+            retro.classList.remove('hidden');
+            if (seleccionada === caso.correcta) {
+                retro.className = "text-xs p-3 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-800 font-medium";
+                retro.innerHTML = `✅ <b>¡Respuesta Correcta!</b> ${caso.retro}`;
+            } else {
+                retro.className = "text-xs p-3 rounded-lg bg-rose-50 border border-rose-200 text-rose-800 font-medium";
+                retro.innerHTML = `❌ <b>Respuesta Incorrecta.</b> Recuerda analizar el distractor clínico. ${caso.retro}`;
+            }
+        }
+
+        // Cargar caso inicial al abrir la pestaña
+        window.onload = function() {
+            cargarCaso('ensayo');
+            calcularRiesgos();
+        };
+    </script>
+</body>
+</html>
